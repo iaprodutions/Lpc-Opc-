@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#101827">
+<title>LPC & OPC Study Companion</title>
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+:root{--bg:#0b1220;--panel:#131e30;--panel2:#1a2940;--text:#edf3fb;--muted:#9eafc5;--line:#2a3a52;--accent:#79b8ff;--green:#6ed6ad;--radius:18px}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,textarea{font:inherit}button{cursor:pointer;border:1px solid var(--line);background:var(--panel2);color:var(--text);border-radius:12px;padding:11px 15px}
+button.primary{background:var(--accent);color:#081321;border-color:var(--accent);font-weight:700}
+button.ghost{background:transparent}button:disabled{opacity:.35;cursor:not-allowed}
+header{position:sticky;top:0;z-index:5;background:#0b1220ee;backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:14px max(16px,calc((100vw - 850px)/2));display:flex;align-items:center;gap:12px}
+.brand{font-weight:800;letter-spacing:.2px}.brand small{display:block;color:var(--muted);font-weight:500;font-size:11px;letter-spacing:1.2px}
+main{max-width:850px;margin:auto;padding:22px 16px 110px}.eyebrow{color:var(--accent);font-size:12px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase}
+h1{font-size:clamp(27px,6vw,38px);line-height:1.15;margin:8px 0 10px}h2{font-size:24px;margin:8px 0}h3{font-size:18px;margin:0 0 8px}
+p{color:#d5dfed}.muted{color:var(--muted)}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.subject,.tile{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:17px;text-align:left;min-height:126px}
+.subject .symbol{font-size:24px}.subject strong{display:block;margin:8px 0 2px}.subject small{color:var(--muted)}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin:14px 0}
+.actions{display:flex;flex-wrap:wrap;gap:9px;margin:18px 0}.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:18px 0}.tab{padding:12px 5px;font-size:13px}.tab.active{border-color:var(--accent);background:#17314d;color:#cfe6ff}
+.slide{min-height:340px;display:flex;flex-direction:column;justify-content:center}.slide h2{font-size:30px}.slide .body{font-size:17px}.slide ul{padding-left:22px}.slide li{margin:10px 0;color:#d5dfed}
+.progress{height:5px;background:#26364d;border-radius:9px;overflow:hidden;margin:14px 0}.progress span{display:block;height:100%;background:var(--accent)}
+.navrow{display:flex;justify-content:space-between;gap:10px;margin-top:16px}.navrow button{flex:1}
+textarea{width:100%;min-height:210px;resize:vertical;background:#0d1727;color:var(--text);border:1px solid var(--line);border-radius:12px;padding:14px;outline:none}
+textarea:focus,input:focus{border-color:var(--accent)}.note-meta{font-size:12px;color:var(--muted);margin-top:8px}
+.flashcard{min-height:280px;display:flex;flex-direction:column;justify-content:center;text-align:center;align-items:center;gap:16px}
+.flashcard .question{font-size:24px;font-weight:750}.answer{background:#102d2a;border:1px solid #286252;padding:14px;border-radius:12px;width:100%;color:#c8f5e5}
+.pill{display:inline-block;border:1px solid var(--line);border-radius:99px;padding:4px 10px;color:var(--muted);font-size:12px}
+footer{color:var(--muted);font-size:12px;text-align:center;margin-top:35px}
+@media(max-width:520px){.grid{grid-template-columns:1fr 1fr}.subject{padding:13px;min-height:118px}.subject strong{font-size:14px}.tabs{gap:5px}.tab{font-size:12px}}
+.editor{min-height:260px;background:#0d1727;color:#fff !important;border:1px solid var(--line);border-radius:12px;padding:14px;outline:none;line-height:1.65}.editor,.editor *{color:#fff !important;-webkit-text-fill-color:#fff !important}.slide-tools{display:flex;justify-content:flex-end;gap:8px;margin:0 0 8px}.icon-button{width:42px;height:42px;padding:0;font-size:19px}.tool-menu{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;margin:0 0 12px}.flashcard{position:relative}.card-settings{position:absolute;top:12px;right:12px}.card-editor{width:100%;display:grid;gap:10px;text-align:left}.card-editor textarea{min-height:90px}.editor:focus{border-color:var(--accent)}.editor li{margin:8px 0}.editor img{max-width:100%}.subject{min-width:0}.topic-open{color:var(--text)}.topic-open strong{display:block;margin:8px 0 2px}.delete-topic{font-size:12px;padding:7px 10px;color:#ffb9b9;border-color:#70404a}label{display:block;color:var(--muted);font-size:13px;font-weight:700}
+/* Inserted study images stay within the text column and never dominate a slide. */
+.slide .body img,.editor img{display:block;width:auto !important;max-width:100% !important;height:auto !important;max-height:280px !important;object-fit:contain;border-radius:10px;margin:12px auto}
+.home-title-row{display:flex;align-items:flex-start;gap:12px}.home-title-row>div{flex:1;min-width:0}.home-settings{flex:0 0 auto}.topic-tools{display:flex;flex-wrap:wrap;gap:8px;justify-content:flex-end;margin:0 0 14px}.topic-card-tools{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}.topic-card-tools button{padding:7px 10px;font-size:12px}.edit-toolbar{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:8px;margin:0 0 12px}.edit-toolbar button{padding:9px 12px}.slide-editor-panel{min-height:340px}.card-edit-panel{position:relative}.card-edit-panel textarea{min-height:100px}.empty-slide{min-height:220px;display:grid;place-items:center;text-align:center}.tool-menu[hidden]{display:none !important}.storage-panel input,.storage-panel textarea{width:100%;margin:6px 0 12px;padding:11px;border-radius:10px;background:#0d1727;color:var(--text);border:1px solid var(--line)}.storage-panel textarea{min-height:100px}.storage-actions{display:flex;flex-wrap:wrap;gap:8px}.storage-status{font-size:13px;color:var(--muted);margin-top:10px;overflow-wrap:anywhere}.storage-progress{height:7px;background:#26364d;border-radius:9px;overflow:hidden;margin:10px 0}.storage-progress span{display:block;height:100%;width:0;background:var(--green)}.missing-local-image{min-height:42px;min-width:120px;border:1px dashed #d99b52;padding:8px;color:#ffd49a;background:#342819}
+
+.test-panel{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin:14px 0}
+.test-topic-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0 18px}
+.test-topic-option{display:flex;align-items:center;gap:9px;padding:10px 12px;background:#0d1727;border:1px solid var(--line);border-radius:11px;color:var(--text);font-weight:600}
+.test-topic-option input,.test-check input{width:18px;height:18px;accent-color:var(--accent)}
+.test-check{display:flex;align-items:center;gap:9px;margin:12px 0;color:var(--text)}
+.test-number{width:100%;padding:11px;border:1px solid var(--line);border-radius:10px;background:#0d1727;color:var(--text);margin:6px 0 12px}
+.subtopic-panel{margin:14px 0;padding:16px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius)}.subtopic-list{display:grid;gap:8px;margin:12px 0}.subtopic-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px;background:#0d1727;border:1px solid var(--line);border-radius:10px}.subtopic-row .grow{flex:1;min-width:120px}.wrong-review{margin-top:18px}.wrong-item{padding:12px;margin:10px 0;background:#0d1727;border:1px solid var(--line);border-radius:10px}.wrong-item strong{display:block;margin-bottom:6px}.subtopic-panel{margin:14px 0;padding:16px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius)}.subtopic-list{display:grid;gap:8px;margin:12px 0}.subtopic-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px;background:#0d1727;border:1px solid var(--line);border-radius:10px}.subtopic-row .grow{flex:1;min-width:120px}.wrong-review{margin-top:18px}.wrong-item{padding:12px;margin:10px 0;background:#0d1727;border:1px solid var(--line);border-radius:10px}.wrong-item strong{display:block;margin-bottom:6px}.test-question{font-size:clamp(22px,5vw,29px);font-weight:800;text-align:center;margin:16px 0}
+.test-answer{width:100%;background:#102d2a;border:1px solid #286252;padding:16px;border-radius:12px;color:#c8f5e5;text-align:left;margin:12px 0}
+.test-mark-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+.test-mark-row button{min-height:48px}
+.test-score{font-size:clamp(48px,12vw,72px);font-weight:900;line-height:1.1;color:var(--green);text-align:center;margin:14px 0}
+.test-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:18px 0}
+.test-stat{background:#0d1727;border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center}
+.test-stat strong{display:block;font-size:23px}
+@media(max-width:520px){.test-topic-list{grid-template-columns:1fr}.test-stat-grid{gap:6px}.test-stat{padding:9px 5px}}
+</style>
+</head>
+<body>
+<header>
+  <button class="ghost" id="backBtn" style="display:none" aria-label="Back">←</button>
+  <div class="brand">LPC & OPC <small>STUDY COMPANION</small></div>
+  <span style="margin-left:auto" class="pill" id="saveStatus">Saved on this device</span>
+</header>
+<main id="app"></main>
+<script>
+let topics = [
+ {id:"airframes",name:"Airframes & Flight Controls",icon:"✈️",slides:[
+  ["Flaps","Type: Full-span, double-slotted Fowler flaps.",["Full span: extend from the inboard wing area to the wing tips.","Double-slotted: the slots help re-energise the boundary layer and delay airflow separation.","Fowler: the flaps move backwards and downwards.","Six flap sections in total — three on each wing: inboard fore flap, inboard trailing flap and outboard fore flap."]],
+  ["Flap working mechanism","Hydraulic actuation and speed control",["Hydraulically actuated by an actuator in the cabin roof through push-pull rods, levers and bell cranks.","Restrictors in the hydraulic lines limit fluid flow and therefore limit flap extension and retraction speeds.","Retraction is slower than extension.","This is deliberate: it minimises out-of-trim control forces if the flaps retract rapidly during a go-around."]],
+  ["Geared servo tabs","Reduce the force required to move control surfaces.",["Move in the opposite direction to the control surface movement.","Located on the inboard sides of both ailerons and on the bottom of the rudder."]],
+  ["Trim tab","Manually removes sustained control pressure.",["Used to set the required deflection on a control surface to remove control pressure.","Located on the left aileron, left elevator and top of the rudder."]],
+  ["Flap elevator interconnect tab","Automatically helps counter the pitch-up tendency when flaps extend.",["Provides automatic adjustment to reduce aircraft pitch-up when flaps are extended.","Most effective after 10° of flap.","Located on the right elevator."]],
+  ["Wing fences","Help preserve aileron effectiveness at low speed.",["Direct spanwise airflow along the wing towards the trailing edge and ailerons.","This helps make the ailerons more effective at slow speeds."]],
+  ["Stall bars","Encourage the inboard wing to stall first.",["Designed to make the inboard area of the wing stall first.","A more gradual stall helps retain aileron effectiveness for longer.","For float operations: two stall bars on the right wing and one on the left, to help both wings stall evenly given the aircraft's left-roll tendency."]],
+  ["Stall vane","Electrical stall-warning switches.",["When raised, the vane operates electrical switches that provide power to the stall warning light and horn.","Two vanes on the left wing: one lower and one slightly higher.","The lower vane is always active. The upper vane becomes active when flaps are extended beyond 12°.","Warning occurs approximately 4–9 knots above stall speed."]],
+  ["Spring strut","Returns the control column towards neutral.",["Located behind the co-pilot's control column.","Helps bring the control column to the neutral position."]],
+  ["Bonding straps & static wicks","Electrical bonding and static discharge.",["Bonding straps are provided at flight-surface hinge locations to improve electrical grounding of the aircraft structure.","Proper grounding helps minimise hinge damage during lightning strikes.","Static wicks are fitted to flight-control trailing edges: two on each wing, three on the rudder, three on the right elevator and two on the left elevator.","Total: 10 static wicks. Minimum required for flight: 8."]]
+ ],cards:[
+ ["What type of flaps are fitted?","Full-span, double-slotted Fowler flaps."],
+ ["What does Fowler describe?","The flap moves backwards and downwards."],
+ ["How many flap sections are there?","Six in total: three on each wing."],
+ ["What actuates the flaps?","A hydraulic actuator in the cabin roof."],
+ ["Why are restrictors fitted in flap hydraulic lines?","To limit fluid flow and flap operating speed."],
+ ["Which is slower: flap extension or retraction?","Retraction is slower than extension."],
+ ["Why is flap retraction deliberately slower?","To minimise out-of-trim control forces during a go-around."],
+ ["Which way do geared servo tabs move?","Opposite to the control surface movement."],
+ ["What is the purpose of a trim tab?","To remove sustained control pressure by setting tab deflection."],
+ ["Where is the flap elevator interconnect tab?","On the right elevator."],
+ ["When is the flap elevator interconnect most effective?","After 10° of flap."],
+ ["What do wing fences do?","Guide spanwise airflow towards the trailing edge and ailerons."],
+ ["Where are stall bars fitted for float operations?","Two on the right wing and one on the left."],
+ ["How many stall vanes are fitted, and where?","Two on the left wing: one lower and one slightly higher."],
+ ["When does the upper stall vane become active?","When flaps are extended beyond 12°."],
+ ["How far above stall speed does the warning occur?","Approximately 4–9 knots."],
+ ["Where is the spring strut located?","Behind the co-pilot's control column."],
+ ["How many static wicks are fitted?","Ten total."],
+ ["What is the minimum number of static wicks required for flight?","Eight."]
+ ]},
+ {id:"hydraulic",name:"Hydraulic System",icon:"💧",slides:[],cards:[]},
+ {id:"fuel",name:"Fuel System",icon:"⛽",slides:[],cards:[]},
+ {id:"powerplant",name:"Power Plant",icon:"⚙️",slides:[],cards:[]},
+ {id:"propeller",name:"Propeller",icon:"🌀",slides:[],cards:[]},
+ {id:"performance",name:"Performance",icon:"📈",slides:[],cards:[]},
+ {id:"massbalance",name:"Mass & Balance",icon:"⚖️",slides:[],cards:[]},
+ {id:"om",name:"OM Part A & B Reviews",icon:"📘",slides:[],cards:[]}
+];
+let currentTopic=null, section="study", slideIndex=0, cardIndex=0, revealed=false, slideEditing=false, cardEditing=false, topicSettingsOpen=false, topicDeleteMode=false, topicOrderMode=false, storageSettingsOpen=false;
+let testView=null, activeTest=null, testSelectedTopicIds=[];
+let currentMainTopic=null, currentSubtopic=null, subtopicSettingsOpen=false;
+const app=document.getElementById("app"), backBtn=document.getElementById("backBtn");
+const DATA_KEY="lpcopc-study-companion-v2";
+const IMAGE_DB_NAME="lpcopc-local-images-v1", IMAGE_STORE="images";
+let imageDbPromise=null, localImageUrls=new Map();
+function readJson(k,fallback){try{return JSON.parse(localStorage.getItem(k)||sessionStorage.getItem(k)||"null")??fallback}catch{return fallback}}
+const key=(topic,sub)=>`lpcopc-note-${topic}-${sub}`;
+function escapeHtml(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function persist(){try{localStorage.setItem(DATA_KEY,JSON.stringify(topics));document.getElementById("saveStatus").textContent="Saved on this device ✓";return true}catch(e){document.getElementById("saveStatus").textContent="Device storage full";alert("Could not save your study data because browser storage is full. Pictures should be stored in Supabase after migration; export a backup and check available device storage.");return false}}
+function loadSaved(){try{const saved=JSON.parse(localStorage.getItem(DATA_KEY)||"null");if(Array.isArray(saved)){const baseById=new Map(topics.map(t=>[t.id,t]));const savedIds=new Set(saved.map(t=>t.id));topics=[...saved.map(t=>({...baseById.get(t.id),...t})),...topics.filter(t=>!savedIds.has(t.id))];}topics.forEach(t=>{if(typeof t.notes!=="string"){let legacy=localStorage.getItem(key(t.id,"general"))||"";const oldSlideNotes=(t.slides||[]).map((slide,i)=>({title:slide[0],text:localStorage.getItem(key(t.id,i))||""})).filter(x=>x.text.trim());if(oldSlideNotes.length){legacy += (legacy?"\n\n":"")+oldSlideNotes.map(x=>`[${x.title}]\n${x.text}`).join("\n\n");}t.notes=legacy;}if(!Array.isArray(t.slides))t.slides=[];if(!Array.isArray(t.cards))t.cards=[];if(!Array.isArray(t.subtopics))t.subtopics=[];t.subtopics.forEach(st=>{if(!Array.isArray(st.slides))st.slides=[];if(!Array.isArray(st.cards))st.cards=[];if(typeof st.notes!=="string")st.notes="";});});}catch(e){console.warn("Saved study data could not be loaded",e)}}
+loadSaved();
+function showHome(){currentTopic=null;currentMainTopic=null;currentSubtopic=null;slideEditing=false;cardEditing=false;backBtn.style.display="none";
+ const testContent=testView==="setup"?renderTestSetup():testView==="running"?renderTestQuestion():testView==="results"?renderTestResults():"";
+ const showTopics=!testView;
+ app.innerHTML=`<div class="home-title-row"><div><div class="eyebrow">Your training workspace</div><h1>What would you like to study?</h1><p class="muted">Choose a subject to open its study slides, additional notes and review cards.</p></div><button class="icon-button home-settings" id="topicSettings" aria-label="Topic settings" title="Topic settings">⚙️</button><button class="icon-button" id="cloudSettings" aria-label="Storage and backup settings" title="Local storage and backup">💾</button></div>${!testView?`<div class="actions"><button class="primary" id="takeTest">📝 Take a test</button></div>`:""}${storageSettingsOpen?renderStoragePanel():""}${topicSettingsOpen?`<div class="topic-tools" id="topicToolMenu"><button class="primary" id="addTopic">＋ Add topic</button><button id="deleteTopicMode">Delete topic</button><button id="changeTopicOrder">↕ Change order</button></div>`:""}${testContent}${showTopics?`<div class="grid">${topics.map((t,i)=>`<div class="subject"><button class="topic-open" data-topic="${escapeHtml(t.id)}" style="display:block;width:100%;border:0;background:none;text-align:left;padding:0"><span class="symbol">${escapeHtml(t.icon||"📚")}</span><strong>${escapeHtml(t.name)}</strong><small>${t.slides.length} slides · ${t.cards.length} cards · ${(t.subtopics||[]).length} subtopics</small></button>${topicDeleteMode||topicOrderMode?`<div class="topic-card-tools">${topicDeleteMode?`<button class="delete-topic" data-delete="${escapeHtml(t.id)}">Delete topic</button>`:""}${topicOrderMode?`<button data-move="${escapeHtml(t.id)}" data-dir="-1" ${i===0?"disabled":""}>↑ Move up</button><button data-move="${escapeHtml(t.id)}" data-dir="1" ${i===topics.length-1?"disabled":""}>↓ Move down</button>`:""}</div>`:""}</div>`).join("")}</div>`:""}<footer>Study content and images are stored locally on this device. Export backups regularly to protect your work.</footer>`;
+ const cloudButton=document.getElementById("cloudSettings");if(cloudButton)cloudButton.onclick=()=>{storageSettingsOpen=!storageSettingsOpen;showHome()};
+ const takeTestButton=document.getElementById("takeTest");if(takeTestButton)takeTestButton.onclick=()=>{testView="setup";activeTest=null;testSelectedTopicIds=topics.map(t=>t.id);storageSettingsOpen=false;topicSettingsOpen=false;showHome()};
+ bindStoragePanel();
+ bindTestControls();
+ app.querySelectorAll("[data-topic]").forEach(b=>b.onclick=()=>openTopic(b.dataset.topic));
+ if(document.getElementById("topicSettings"))document.getElementById("topicSettings").onclick=()=>{topicSettingsOpen=!topicSettingsOpen;if(!topicSettingsOpen){topicDeleteMode=false;topicOrderMode=false}showHome()};
+ if(document.getElementById("addTopic"))document.getElementById("addTopic").onclick=addTopic;
+ if(document.getElementById("deleteTopicMode"))document.getElementById("deleteTopicMode").onclick=()=>{topicDeleteMode=!topicDeleteMode;topicOrderMode=false;showHome()};
+ if(document.getElementById("changeTopicOrder"))document.getElementById("changeTopicOrder").onclick=()=>{topicOrderMode=!topicOrderMode;topicDeleteMode=false;showHome()};
+ app.querySelectorAll("[data-delete]").forEach(b=>b.onclick=()=>deleteTopic(b.dataset.delete));
+ app.querySelectorAll("[data-move]").forEach(b=>b.onclick=()=>moveTopic(b.dataset.move,Number(b.dataset.dir)));
+}
+function addTopic(){const name=prompt("Enter the new main topic name:");if(!name||!name.trim())return;const icon=prompt("Choose an icon/emoji for this topic (optional):","📚")||"📚";const id="custom-"+Date.now();topics.push({id,name:name.trim(),icon,slides:[],cards:[],notes:""});persist();topicSettingsOpen=false;topicDeleteMode=false;topicOrderMode=false;showHome()}
+function deleteTopic(id){const t=topics.find(x=>x.id===id);if(!t)return;if(!confirm(`Delete “${t.name}” and all its slides, notes and review cards? This cannot be undone.`))return;topics=topics.filter(x=>x.id!==id);persist();topicDeleteMode=false;showHome()}
+function moveTopic(id,dir){const i=topics.findIndex(t=>t.id===id),j=i+dir;if(i<0||j<0||j>=topics.length)return;[topics[i],topics[j]]=[topics[j],topics[i]];persist();showHome()}
+function openTopic(id){currentMainTopic=topics.find(t=>t.id===id);currentSubtopic=null;subtopicSettingsOpen=false;currentTopic=currentMainTopic;section="study";slideIndex=0;cardIndex=0;revealed=false;slideEditing=false;cardEditing=false;renderTopic()}
+function openSubtopic(id){subtopicSettingsOpen=false;const st=(currentMainTopic?.subtopics||[]).find(x=>x.id===id);if(!st)return;currentSubtopic=st;currentTopic=st;section="study";slideIndex=0;cardIndex=0;revealed=false;slideEditing=false;cardEditing=false;renderTopic()}
+function renderSubtopicManager(){const list=currentMainTopic?.subtopics||[];return `<div class="subtopic-panel"><div class="row" style="display:flex;align-items:center;justify-content:space-between;gap:8px"><div><div class="eyebrow">Optional subtopics</div><strong>Organise this topic into smaller subjects</strong></div><button class="primary" id="addSubtopic">＋ Add subtopic</button></div><p class="muted">Choose a subtopic to study its own slides, notes and review cards. If you do not choose one, the main topic below works as usual.</p>${list.length?`<div class="subtopic-list">${list.map(st=>`<div class="subtopic-row"><button class="grow" data-open-subtopic="${escapeHtml(st.id)}">📂 ${escapeHtml(st.name)}</button><button data-edit-subtopic="${escapeHtml(st.id)}">Edit</button><button class="delete-topic" data-delete-subtopic="${escapeHtml(st.id)}">Delete</button></div>`).join("")}</div>`:`<p class="muted">No subtopics created yet.</p>`}</div>`}
+function addSubtopic(){const name=prompt("Enter a name for this subtopic:");if(!name||!name.trim())return;const st={id:"sub-"+Date.now()+"-"+Math.random().toString(36).slice(2,7),name:name.trim(),icon:"📂",slides:[],cards:[],notes:""};currentMainTopic.subtopics=currentMainTopic.subtopics||[];currentMainTopic.subtopics.push(st);persist();renderTopic()}
+function editSubtopic(id){const st=(currentMainTopic.subtopics||[]).find(x=>x.id===id);if(!st)return;const name=prompt("Rename subtopic:",st.name);if(!name||!name.trim())return;st.name=name.trim();persist();renderTopic()}
+function deleteSubtopic(id){const st=(currentMainTopic.subtopics||[]).find(x=>x.id===id);if(!st||!confirm(`Delete subtopic “${st.name}” and all its slides, notes and cards?`))return;currentMainTopic.subtopics=currentMainTopic.subtopics.filter(x=>x.id!==id);persist();renderTopic()}
+function renderTopic(){backBtn.style.display="block";const t=currentTopic;const tabs=`<div class="tabs"><button class="tab ${section==="study"?"active":""}" data-section="study">📖 Study</button><button class="tab ${section==="notes"?"active":""}" data-section="notes">📝 Additional Notes</button><button class="tab ${section==="review"?"active":""}" data-section="review">🧠 Review</button></div>`;let content="";if(section==="study")content=renderStudy();if(section==="notes")content=renderNotes();if(section==="review")content=renderReview();app.innerHTML=`<div class="home-title-row"><div><div class="eyebrow">${escapeHtml(currentSubtopic?currentMainTopic.name+" / ":"")}${escapeHtml(t.name)}</div><h1>${section==="study"?"Study slides":section==="notes"?"Your additional notes":"Flashcard review"}</h1><p class="muted">Your three-part learning space for this subject.</p></div>${!currentSubtopic?`<button class="icon-button" id="subtopicSettings" aria-label="Subtopic settings" title="Subtopic settings">⚙️</button>`:`<button class="icon-button" id="backToMainTopic" aria-label="Back to main topic" title="Back to main topic">↩</button>`}</div>${!currentSubtopic&&subtopicSettingsOpen?renderSubtopicManager():""}${tabs}${content}`;app.querySelectorAll("[data-section]").forEach(b=>b.onclick=()=>{section=b.dataset.section;slideEditing=false;cardEditing=false;renderTopic()});bindSection();
+ const subtopicSettingsButton=document.getElementById("subtopicSettings");if(subtopicSettingsButton)subtopicSettingsButton.onclick=()=>{subtopicSettingsOpen=!subtopicSettingsOpen;renderTopic()};
+ const addSt=document.getElementById("addSubtopic");if(addSt)addSt.onclick=addSubtopic;
+ app.querySelectorAll("[data-open-subtopic]").forEach(b=>b.onclick=()=>openSubtopic(b.dataset.openSubtopic));
+ app.querySelectorAll("[data-edit-subtopic]").forEach(b=>b.onclick=()=>editSubtopic(b.dataset.editSubtopic));
+ app.querySelectorAll("[data-delete-subtopic]").forEach(b=>b.onclick=()=>deleteSubtopic(b.dataset.deleteSubtopic));
+ const backMain=document.getElementById("backToMainTopic");if(backMain)backMain.onclick=()=>{currentSubtopic=null;subtopicSettingsOpen=false;currentTopic=currentMainTopic;section="study";slideIndex=0;cardIndex=0;renderTopic()};
+ hydrateLocalImages()}
+function slideHtml(s){if(s[3])return s[3];return `${s[1]?`<p>${escapeHtml(s[1])}</p>`:""}<ul>${(s[2]||[]).map(x=>`<li>${escapeHtml(x)}</li>`).join("")}</ul>`}
+function renderStudy(){const slides=currentTopic.slides;slideIndex=Math.max(0,Math.min(slideIndex,Math.max(0,slides.length-1)));const toolbar=slideEditing?`<div class="edit-toolbar"><button id="addSlide">＋ Add slide</button><button id="deleteSlide" ${slides.length?"":"disabled"}>Delete slide</button><button id="insertImageTool" ${slides.length?"":"disabled"}>＋ Insert Image</button><button class="primary" id="saveSlide">Save</button><input id="toolImagePicker" type="file" accept="image/*" multiple hidden></div>`:`<div class="slide-tools"><button class="icon-button" id="slideSettings" aria-label="Slide settings" title="Slide settings">⚙️</button></div>`;
+ if(!slides.length){return `${toolbar.replace(/<button class="primary" id="saveSlide">Save<\/button>/, "")}<div class="panel empty-slide"><div><h2>No study slides yet</h2><p class="muted">Open settings and choose Add Slide to create your first slide.</p></div></div>`}
+ const s=slides[slideIndex];if(slideEditing)return `${toolbar}${renderEditor()}`;
+ return `${toolbar}<div class="progress"><span style="width:${(slideIndex+1)/slides.length*100}%"></span></div><div class="panel slide"><div class="eyebrow">Slide ${slideIndex+1} of ${slides.length}</div><h2>${escapeHtml(s[0])}</h2><div class="body">${slideHtml(s)}</div></div><div class="navrow"><button id="prevSlide" ${slideIndex===0?"disabled":""}>← Previous</button><button class="primary" id="nextSlide">${slideIndex===slides.length-1?"Finish":"Next →"}</button></div>`}
+function renderEditor(){const s=currentTopic.slides[slideIndex];const title=escapeHtml(s?.[0]||"");const html=s?slideHtml(s):"";return `<div class="panel slide-editor-panel"><div class="eyebrow">Editing slide</div><label for="slideTitle">Slide title</label><input id="slideTitle" value="${title}" style="width:100%;margin:8px 0 14px;padding:12px;border-radius:10px;background:#0d1727;color:var(--text);border:1px solid var(--line)"><div id="slideEditor" class="editor" contenteditable="true" spellcheck="true">${html||"<p>Start typing your study notes here…</p>"}</div><input id="imagePicker" type="file" accept="image/*" multiple hidden><div class="note-meta">Text and inserted images will be saved with this slide.</div></div>`}
+function renderNotes(){const saved=currentTopic.notes||"";return `<div class="panel"><div class="eyebrow">Shared subject notes</div><h2>${escapeHtml(currentTopic.name)}</h2><p class="muted">One notes page for this entire subject. These notes are shared across all slides in this topic and are saved separately from your study slides.</p><textarea id="topicNotes" placeholder="Write anything you want to remember about this subject...">${escapeHtml(saved)}</textarea><div class="actions"><button class="primary" id="saveTopicNotes">Save notes</button><button id="clearTopicNotes">Clear notes</button></div><div class="note-meta" id="topicNoteMeta">${saved?"Saved on this device":"No additional notes saved yet"}</div></div>`}
+function renderReview(){const cards=currentTopic.cards;if(cardEditing)return renderCardEditor();if(!cards.length)return `<div class="panel flashcard"><button class="icon-button card-settings" id="cardSettings" aria-label="Card settings" title="Card settings">⚙️</button><h2>No review cards yet</h2><p class="muted">Open settings to add your first card.</p></div>`;cardIndex=Math.max(0,Math.min(cardIndex,cards.length-1));const c=cards[cardIndex];return `<div class="progress"><span style="width:${(cardIndex+1)/cards.length*100}%"></span></div><div class="panel flashcard"><button class="icon-button card-settings" id="cardSettings" aria-label="Card settings" title="Card settings">⚙️</button><span class="pill">Card ${cardIndex+1} of ${cards.length}</span><div class="question">${escapeHtml(c[0])}</div>${revealed?`<div class="answer"><strong>Answer</strong><br>${escapeHtml(c[1])}</div>`:`<p class="muted">Think of your answer before revealing it.</p>`}<button class="primary" id="reveal">${revealed?"Hide answer":"Reveal answer"}</button></div><div class="navrow"><button id="prevCard" ${cardIndex===0?"disabled":""}>← Previous</button><button class="primary" id="nextCard">${cardIndex===cards.length-1?"Start again":"Next card →"}</button></div>`}
+function cardsForTopic(t){const out=[];(t.cards||[]).forEach(c=>out.push({card:c,label:t.name}));(t.subtopics||[]).forEach(st=>(st.cards||[]).forEach(c=>out.push({card:c,label:t.name+" / "+st.name})));return out}
+function renderTestSetup(){
+ const total=topics.filter(t=>testSelectedTopicIds.includes(t.id)).reduce((n,t)=>n+cardsForTopic(t).filter(x=>String(x.card[0]||"").trim()&&String(x.card[1]||"").trim()).length,0);
+ return `<div class="test-panel"><div class="eyebrow">Knowledge check</div><h2>Build your test</h2><p class="muted">Choose the subjects and how many saved Review cards you want to answer. Questions will be shuffled.</p><label class="test-check"><input type="checkbox" id="testAllTopics" ${testSelectedTopicIds.length===topics.length?"checked":""}> Select all topics</label><div class="test-topic-list">${topics.map(t=>`<label class="test-topic-option"><input type="checkbox" data-test-topic="${escapeHtml(t.id)}" ${testSelectedTopicIds.includes(t.id)?"checked":""}><span>${escapeHtml(t.icon||"📚")} ${escapeHtml(t.name)} <small class="muted">(${cardsForTopic(t).filter(x=>String(x.card[0]||"").trim()&&String(x.card[1]||"").trim()).length})</small></span></label>`).join("")}</div><label for="testQuestionCount">Number of questions</label><input class="test-number" id="testQuestionCount" type="number" min="1" max="${Math.max(1,total)}" value="${Math.min(10,Math.max(1,total))}"><label class="test-check"><input type="checkbox" id="testAllQuestions"> Use all available cards from selected topics (${total} available)</label><div class="actions"><button class="primary" id="startTest">Start test →</button><button id="cancelTest">Cancel</button></div><div class="note-meta">Only saved Review cards with both a question and answer are included.</div></div>`;
+}
+function renderTestQuestion(){
+ if(!activeTest)return renderTestSetup();
+ const item=activeTest.cards[activeTest.index],n=activeTest.index+1,total=activeTest.cards.length;
+ return `<div class="test-panel"><div class="row" style="display:flex;justify-content:space-between;align-items:center"><div class="eyebrow">Test in progress</div><button id="exitTest">Exit test</button></div><div class="progress"><span style="width:${(n-1)/total*100}%"></span></div><div class="row" style="display:flex;justify-content:space-between;gap:10px"><span class="pill">Question ${n} of ${total}</span><span class="pill">${escapeHtml(item.topic)}</span></div><div class="test-question">${escapeHtml(item.question)}</div>${activeTest.revealed?`<div class="test-answer"><strong>Answer</strong><br>${escapeHtml(item.answer)}</div><p class="muted" style="text-align:center">Did you get it right?</p><div class="test-mark-row"><button class="primary" id="markTestCorrect">✓ I got it right</button><button id="markTestIncorrect">✕ I got it wrong</button></div>`:`<div class="actions" style="justify-content:center"><button class="primary" id="revealTestAnswer">Reveal answer</button></div>`}</div><div class="note-meta" style="text-align:center">Your score is calculated from the answers you mark as correct.</div>`;
+}
+function renderTestResults(){
+ const t=activeTest;if(!t)return renderTestSetup();const total=t.cards.length,correct=t.correct,wrong=t.incorrect,pct=total?Math.round(correct/total*100):0;
+ return `<div class="test-panel"><div class="eyebrow">${t.cancelled?"Test exited":"Test completed"}</div><h2 style="text-align:center">Your result</h2><div class="test-score">${pct}%</div><p class="muted" style="text-align:center">You got ${correct} out of ${total} questions correct.</p><div class="test-stat-grid"><div class="test-stat"><strong>${total}</strong><small class="muted">Questions</small></div><div class="test-stat"><strong>${correct}</strong><small class="muted">Correct</small></div><div class="test-stat"><strong>${wrong}</strong><small class="muted">Incorrect</small></div></div><div class="progress"><span style="width:${pct}%"></span></div><div class="wrong-review"><h3>Review incorrect questions</h3>${t.incorrectItems?.length?t.incorrectItems.map((x,i)=>`<div class="wrong-item"><strong>${i+1}. ${escapeHtml(x.question)}</strong><div class="muted">${escapeHtml(x.topic)}</div><div><b>Correct answer:</b> ${escapeHtml(x.answer)}</div></div>`).join(""):`<p class="muted">No incorrect answers. Excellent work!</p>`}</div><div class="actions"><button class="primary" id="retakeTest">Take another test</button><button id="finishTest">Return to topics</button></div></div>`;
+}
+function shuffleArray(items){const a=[...items];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function startTestFromSetup(){
+ const selected=[...app.querySelectorAll("[data-test-topic]:checked")].map(x=>x.dataset.testTopic);testSelectedTopicIds=selected;
+ if(!selected.length){alert("Select at least one topic.");return}
+ const cards=[];topics.filter(t=>selected.includes(t.id)).forEach(t=>cardsForTopic(t).forEach(({card:c,label})=>{const question=String(c[0]||"").trim(),answer=String(c[1]||"").trim();if(question&&answer)cards.push({question,answer,topic:label})}));
+ if(!cards.length){alert("The selected topics do not have any saved Review cards yet.");return}
+ const all=document.getElementById("testAllQuestions")?.checked;
+ const requested=Number(document.getElementById("testQuestionCount")?.value||10);
+ if(!all&&(!Number.isFinite(requested)||requested<1)){alert("Enter a valid number of questions.");return}
+ const shuffled=shuffleArray(cards),chosen=all?shuffled:shuffled.slice(0,Math.min(requested,shuffled.length));
+ activeTest={cards:chosen,index:0,correct:0,incorrect:0,incorrectItems:[],revealed:false,cancelled:false};testView="running";showHome();
+}
+function markTestAnswer(isCorrect){if(!activeTest||!activeTest.revealed)return;const item=activeTest.cards[activeTest.index];if(isCorrect)activeTest.correct++;else{activeTest.incorrect++;activeTest.incorrectItems.push({...item})}if(activeTest.index<activeTest.cards.length-1){activeTest.index++;activeTest.revealed=false;showHome()}else{testView="results";showHome()}}
+function bindTestControls(){
+ const syncTopicSelection=()=>{const checks=[...app.querySelectorAll("[data-test-topic]")];testSelectedTopicIds=checks.filter(x=>x.checked).map(x=>x.dataset.testTopic);const all=document.getElementById("testAllTopics");if(all)all.checked=checks.length>0&&checks.every(x=>x.checked);const count=topics.filter(t=>testSelectedTopicIds.includes(t.id)).reduce((n,t)=>n+cardsForTopic(t).filter(x=>String(x.card[0]||"").trim()&&String(x.card[1]||"").trim()).length,0);const input=document.getElementById("testQuestionCount");if(input){input.max=String(Math.max(1,count));if(Number(input.value)>count&&count>0)input.value=String(count);if(count===0)input.value="1"}const allLabel=app.querySelector("#testAllQuestions");if(allLabel){const label=allLabel.closest("label");if(label)label.lastChild.textContent=` Use all available cards from selected topics (${count} available)`}};
+ const allTopics=document.getElementById("testAllTopics");if(allTopics)allTopics.onchange=()=>{app.querySelectorAll("[data-test-topic]").forEach(c=>c.checked=allTopics.checked);syncTopicSelection()};
+ app.querySelectorAll("[data-test-topic]").forEach(c=>c.onchange=syncTopicSelection);
+ const allQuestions=document.getElementById("testAllQuestions"),count=document.getElementById("testQuestionCount");if(allQuestions&&count)allQuestions.onchange=()=>count.disabled=allQuestions.checked;
+ const start=document.getElementById("startTest");if(start)start.onclick=startTestFromSetup;
+ const cancel=document.getElementById("cancelTest");if(cancel)cancel.onclick=()=>{testView=null;activeTest=null;showHome()};
+ const exit=document.getElementById("exitTest");if(exit)exit.onclick=()=>{if(confirm("Exit this test now? Your answers so far will be shown in the results.")){activeTest.cancelled=true;testView="results";showHome()}};
+ const reveal=document.getElementById("revealTestAnswer");if(reveal)reveal.onclick=()=>{activeTest.revealed=true;showHome()};
+ const yes=document.getElementById("markTestCorrect");if(yes)yes.onclick=()=>markTestAnswer(true);
+ const no=document.getElementById("markTestIncorrect");if(no)no.onclick=()=>markTestAnswer(false);
+ const again=document.getElementById("retakeTest");if(again)again.onclick=()=>{testView="setup";activeTest=null;testSelectedTopicIds=topics.map(t=>t.id);showHome()};
+ const finish=document.getElementById("finishTest");if(finish)finish.onclick=()=>{testView=null;activeTest=null;showHome()};
+}
+function extractPoints(html){const doc=new DOMParser().parseFromString(html,"text/html");let pts=[...doc.querySelectorAll("li")].map(x=>x.textContent.trim()).filter(Boolean);if(!pts.length)pts=[...doc.querySelectorAll("p")].map(x=>x.textContent.trim()).filter(Boolean);return [...new Set(pts)]}
+function directQuestions(point,title){const p=point.replace(/^[-•*\s]+/,"").trim(), low=p.toLowerCase(), out=[];const add=(q,a)=>{if(q&&a&&!out.some(x=>x[0].toLowerCase()===q.toLowerCase()))out.push([q,a])};
+ let m=p.match(/^powered by\s+(.+?)\s+from\s+(.+?)(?:\s+and\s+(.+?))?(?:\s+for backup)?[.]?$/i);
+ if(m){const main=m[1].trim(),bus=m[2].trim(),backup=m[3]?.trim();add(`How is the ${title.toLowerCase()} powered?`,main+(backup?` and ${backup} for backup`:""));add("From which bus is the system powered?",bus);if(backup)add("What is used for backup?",backup);}
+ m=p.match(/^(?:provides?|supplies?)\s+(.+?)\s+to\s+(?:operate|power|control)\s+(.+?)[.]?$/i);
+ if(m){add(`What does the ${title.toLowerCase()} provide?`,`${m[1]} to operate ${m[2]}`);add(`Which component or system is operated by the ${title.toLowerCase()}?`,m[2].replace(/[.]$/, ""));}
+ m=p.match(/^(?:used|utilised|utilized)\s+to\s+(.+?)[.]?$/i);if(m)add(`What is the purpose of the ${title.toLowerCase()}?`,m[1]);
+ m=p.match(/^(?:located|fitted|installed)\s+(?:on|in|at|behind|under|above)\s+(.+?)[.]?$/i);if(m)add(`Where is it located?`,m[1]);
+ m=p.match(/^(.+?)\s+(?:is|are)\s+(?:located|fitted|installed)\s+(?:on|in|at|behind|under|above)\s+(.+?)[.]?$/i);if(m)add(`Where is ${m[1]} located?`,m[2]);
+ m=p.match(/^(?:the\s+)?(.+?)\s+(?:limits?|reduces?|prevents?|controls?|provides?|supplies?)\s+(.+?)[.]?$/i);if(m)add(`What does ${m[1]} do?`,`${m[0]}`);
+ if(!out.length){let clean=p.replace(/[.]$/,"");if(/^when\b/i.test(clean))add(`When ${clean.slice(5).replace(/^does?\s+/i,"")}?`,clean);else if(/^how\b/i.test(clean))add(`How ${clean.slice(4)}?`,clean);else if(/^why\b/i.test(clean))add(`Why ${clean.slice(4)}?`,clean);else add(`What is the key detail about ${title.toLowerCase()}?`,clean)}
+ return out;}
+function updateCardsFromSlide(slide){slide[4]=slide[4]||("slide-"+Date.now()+"-"+Math.random().toString(36).slice(2,7));currentTopic.cards=currentTopic.cards.filter(c=>!(c[2]&&c[2].generated&&c[2].slideId===slide[4]));const points=extractPoints(slide[3]||"");points.forEach(point=>directQuestions(point,slide[0]).forEach(qa=>currentTopic.cards.push([qa[0],qa[1],{generated:true,slideId:slide[4]}])))}
+function cleanEditorHtml(html){
+ const doc=new DOMParser().parseFromString(html,"text/html");
+ doc.body.querySelectorAll("*").forEach(node=>{node.removeAttribute("style");node.removeAttribute("color");node.removeAttribute("class");});
+ doc.body.querySelectorAll("img[data-supabase-path]").forEach(img=>{
+   const oldPath=img.getAttribute("data-supabase-path");
+   img.setAttribute("data-legacy-image-path",oldPath||"");
+   img.removeAttribute("data-supabase-path");
+   img.setAttribute("src","missing-local-image:");
+ });
+ doc.body.querySelectorAll("img[data-local-image-id]").forEach(img=>img.setAttribute("src","local-image:"+img.dataset.localImageId));
+ return doc.body.innerHTML
+}
+async function openImageDb(){
+ if(imageDbPromise)return imageDbPromise;
+ imageDbPromise=new Promise((resolve,reject)=>{
+  const req=indexedDB.open(IMAGE_DB_NAME,1);
+  req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains(IMAGE_STORE))db.createObjectStore(IMAGE_STORE,{keyPath:"id"})};
+  req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);
+ });
+ return imageDbPromise;
+}
+async function saveLocalImage(blob,name){
+ const db=await openImageDb(),id="img-"+crypto.randomUUID();
+ await new Promise((resolve,reject)=>{const tx=db.transaction(IMAGE_STORE,"readwrite");tx.objectStore(IMAGE_STORE).put({id,name,blob,type:blob.type||"image/jpeg",createdAt:Date.now()});tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)});
+ return id;
+}
+async function getLocalImage(id){
+ const db=await openImageDb();
+ return new Promise((resolve,reject)=>{const tx=db.transaction(IMAGE_STORE,"readonly"),req=tx.objectStore(IMAGE_STORE).get(id);req.onsuccess=()=>resolve(req.result||null);req.onerror=()=>reject(req.error)});
+}
+async function hydrateLocalImages(){
+ const imgs=[...app.querySelectorAll('img[data-local-image-id],img[data-legacy-image-path],img[data-supabase-path],img[data-image-placeholder]')];
+ for(const img of imgs){
+  try{
+   const id=img.dataset.localImageId;
+   if(id){const record=await getLocalImage(id);if(record){let url=localImageUrls.get(id);if(!url){url=URL.createObjectURL(record.blob);localImageUrls.set(id,url)}img.src=url;continue}}
+   img.alt=(img.alt||"Image")+" — image not imported on this device";
+   img.classList.add("missing-local-image");
+  }catch(e){console.warn("Local image unavailable",e)}
+ }
+}
+async function insertImageAtCursor(file){
+ try{
+  const editor=document.getElementById("slideEditor");if(!editor)return;
+  const range=savedRange?savedRange.cloneRange():null;
+  const bitmap=await createImageBitmap(file),max=1800,scale=Math.min(1,max/Math.max(bitmap.width,bitmap.height));
+  const canvas=document.createElement("canvas");canvas.width=Math.max(1,Math.round(bitmap.width*scale));canvas.height=Math.max(1,Math.round(bitmap.height*scale));
+  canvas.getContext("2d").drawImage(bitmap,0,0,canvas.width,canvas.height);bitmap.close?.();
+  const blob=await new Promise(resolve=>canvas.toBlob(resolve,"image/jpeg",.86));if(!blob)throw new Error("Could not prepare this image.");
+  const id=await saveLocalImage(blob,file.name||"study-image.jpg");
+  const image=document.createElement("img");image.dataset.localImageId=id;image.alt=file.name||"Study image";image.src=URL.createObjectURL(blob);localImageUrls.set(id,image.src);
+  image.style.cssText="display:block;width:auto;max-width:100%;height:auto;max-height:280px;object-fit:contain;border-radius:10px;margin:12px auto";
+  editor.focus();const sel=window.getSelection();if(range){sel.removeAllRanges();sel.addRange(range)}
+  if(sel&&sel.rangeCount){const r=sel.getRangeAt(0);r.deleteContents();r.insertNode(image);r.setStartAfter(image);r.collapse(true);sel.removeAllRanges();sel.addRange(r)}else editor.append(image);saveRange();
+ }catch(err){console.error(err);alert("Image could not be saved: "+(err.message||err)+". Check available device storage.")}
+}
+let savedRange=null;function saveRange(){const sel=window.getSelection();if(sel&&sel.rangeCount){const r=sel.getRangeAt(0);const editor=document.getElementById("slideEditor");if(editor&&editor.contains(r.commonAncestorContainer))savedRange=r.cloneRange()}}
+function beginSlideEdit(){slideEditing=true;savedRange=null;renderTopic();bindEditor()}
+function saveSlideEdits(){const title=document.getElementById("slideTitle")?.value.trim(),editor=document.getElementById("slideEditor");if(!editor)return;if(!title){alert("Please enter a slide title.");return}let s=currentTopic.slides[slideIndex];if(!s){s=[title,"",[],""];currentTopic.slides.push(s);slideIndex=currentTopic.slides.length-1}const html=cleanEditorHtml(editor.innerHTML);s[0]=title;s[1]="";s[2]=extractPoints(html);s[3]=html;updateCardsFromSlide(s);if(persist()){slideEditing=false;savedRange=null;renderTopic()}}
+function bindSection(){const el=id=>document.getElementById(id);
+ if(el("slideSettings"))el("slideSettings").onclick=()=>beginSlideEdit();
+ if(el("addSlide"))el("addSlide").onclick=()=>{currentTopic.slides.push(["New slide","",[]]);slideIndex=currentTopic.slides.length-1;persist();renderTopic();bindEditor()};
+ if(el("deleteSlide"))el("deleteSlide").onclick=()=>{if(!currentTopic.slides.length)return;if(confirm("Delete this slide? Its generated review cards will also be removed.")){const id=currentTopic.slides[slideIndex]?.[4];if(id)currentTopic.cards=currentTopic.cards.filter(c=>!(c[2]?.generated&&c[2].slideId===id));currentTopic.slides.splice(slideIndex,1);slideIndex=Math.max(0,slideIndex-1);slideEditing=false;persist();renderTopic()}};
+ if(el("insertImageTool"))el("insertImageTool").onclick=()=>el("toolImagePicker")?.click();
+ if(el("toolImagePicker"))el("toolImagePicker").onchange=async e=>{for(const file of [...e.target.files])await insertImageAtCursor(file);e.target.value=""};
+ if(el("saveSlide"))el("saveSlide").onclick=saveSlideEdits;
+ if(el("prevSlide"))el("prevSlide").onclick=()=>{slideIndex=Math.max(0,slideIndex-1);renderTopic()};
+ if(el("nextSlide"))el("nextSlide").onclick=()=>{if(slideIndex>=currentTopic.slides.length-1){testView=null;activeTest=null;showHome();return}slideIndex=Math.min(currentTopic.slides.length-1,slideIndex+1);renderTopic()};
+ if(el("saveTopicNotes"))el("saveTopicNotes").onclick=()=>{currentTopic.notes=el("topicNotes").value;if(persist())el("topicNoteMeta").textContent="Saved on this device ✓"};
+ if(el("clearTopicNotes"))el("clearTopicNotes").onclick=()=>{if(confirm("Clear all shared notes for this subject?")){currentTopic.notes="";if(persist())renderTopic()}};
+ if(el("reveal"))el("reveal").onclick=()=>{revealed=!revealed;renderTopic()};
+ if(el("prevCard"))el("prevCard").onclick=()=>{cardIndex=Math.max(0,cardIndex-1);revealed=false;renderTopic()};
+ if(el("nextCard"))el("nextCard").onclick=()=>{cardIndex=cardIndex===currentTopic.cards.length-1?0:cardIndex+1;revealed=false;renderTopic()};
+ if(el("cardSettings"))el("cardSettings").onclick=()=>{cardEditing=true;revealed=false;if(!currentTopic.cards.length){currentTopic.cards.push(["","",{manual:true}]);cardIndex=0;persist()}renderTopic()};
+ if(el("addCard"))el("addCard").onclick=()=>{currentTopic.cards.push(["","",{manual:true}]);cardIndex=currentTopic.cards.length-1;revealed=false;persist();renderTopic()};
+ if(el("deleteCard"))el("deleteCard").onclick=()=>{if(!currentTopic.cards.length)return;if(confirm("Delete this review card?")){currentTopic.cards.splice(cardIndex,1);cardIndex=Math.max(0,cardIndex-1);revealed=false;persist();if(!currentTopic.cards.length)cardEditing=false;renderTopic()}};
+ if(el("saveCard"))el("saveCard").onclick=()=>{const q=el("cardQuestion").value.trim(),a=el("cardAnswer").value.trim();if(!q||!a){alert("Enter both a question and an answer.");return}const c=currentTopic.cards[cardIndex];c[0]=q;c[1]=a;c[2]={...(c[2]||{}),manual:true,generated:false};if(persist()){cardEditing=false;revealed=false;renderTopic()}};
+}
+function renderCardEditor(){const c=currentTopic.cards[cardIndex]||["","",{manual:true}];return `<div class="panel flashcard card-edit-panel"><div class="eyebrow">Edit review card</div><div class="card-editor"><label for="cardQuestion">Question</label><textarea id="cardQuestion" placeholder="Enter a direct question">${escapeHtml(c[0])}</textarea><label for="cardAnswer">Answer</label><textarea id="cardAnswer" placeholder="Enter the answer">${escapeHtml(c[1])}</textarea></div><div class="edit-toolbar" style="margin-top:14px"><button id="addCard">＋ Add card</button><button id="deleteCard" ${currentTopic.cards.length?"":"disabled"}>Delete card</button><button class="primary" id="saveCard">Save card</button></div></div>`}
+function bindEditor(){const editor=document.getElementById("slideEditor");if(!editor)return;editor.addEventListener("keyup",saveRange);editor.addEventListener("mouseup",saveRange);editor.addEventListener("input",saveRange);editor.addEventListener("paste",e=>{e.preventDefault();const text=(e.clipboardData||window.clipboardData).getData("text/plain");document.execCommand("insertText",false,text);editor.querySelectorAll("*").forEach(n=>{n.style.color="#fff";n.style.webkitTextFillColor="#fff";n.removeAttribute("color")});saveRange()});}
+
+function safePathPart(value){return String(value||"topic").replace(/[^a-zA-Z0-9_-]/g,"-").slice(0,70)||"topic"}
+function hashImageSource(value){let h=2166136261;for(let i=0;i<value.length;i++){h^=value.charCodeAt(i);h=Math.imul(h,16777619)}return (h>>>0).toString(16)}
+function renderStoragePanel(){
+ return `<div class="panel storage-panel"><div class="eyebrow">On-device storage</div><h2>Images & backups</h2>
+ <p class="muted">Supabase is not used. Images you insert are copied into this app's private browser storage on your iPhone.</p>
+ <div class="storage-actions">
+ <button class="primary" id="downloadStudyBackup">Download study backup</button>
+ <button id="importStudyBackup">Import study backup</button>
+ <input id="studyBackupPicker" type="file" accept="application/json,.json" hidden>
+ </div>
+ <div class="divider"></div><h3>Reconnect images from LPCOPCfiles</h3>
+ <p class="muted">After restoring a text-only backup, choose the folder containing your original images. The app matches image filenames to the saved slide references. On iPhone, select the images through the Files picker; folder-only access is not guaranteed.</p>
+ <div class="storage-actions"><button class="primary" id="importImageFolder">Import images from Files</button><input id="imageFolderPicker" type="file" accept="image/*" multiple webkitdirectory directory hidden></div>
+ <div class="storage-status" id="sbStatus">Checking local storage…</div>
+ <div class="storage-progress" id="sbProgressWrap" hidden><span id="sbProgress"></span></div>
+ <p class="muted" style="font-size:12px">Images are excluded from JSON backups. Keep your original image folder separately. Browser storage limits are controlled by iOS and are not unlimited.</p>
+ </div>`;
+}
+function storageStatus(message){const el=document.getElementById("sbStatus");if(el)el.textContent=message}
+async function storageStatus(message){
+ const el=document.getElementById("sbStatus");if(el)el.textContent=message;
+}
+function walkTopics(list,fn){for(const t of list){fn(t);walkTopics(t.subtopics||[],fn)}}
+function stripImagesFromBackup(topicList){
+ const copy=JSON.parse(JSON.stringify(topicList));
+ walkTopics(copy, t=>{
+  for(const slide of (t.slides||[])){
+   if(!slide[3])continue;
+   const doc=new DOMParser().parseFromString(slide[3],"text/html");
+   doc.querySelectorAll("img").forEach(img=>{
+    img.removeAttribute("src");img.removeAttribute("data-local-image-id");img.removeAttribute("data-supabase-path");
+    img.removeAttribute("data-legacy-image-path");
+    img.setAttribute("data-image-placeholder","1");
+   });
+   slide[3]=doc.body.innerHTML;
+  }
+ });
+ return copy;
+}
+async function downloadStudyBackup(){
+ try{
+  storageStatus("Preparing study-content backup (images are excluded)…");
+  const backup={format:"LPCOPC_STUDY_BACKUP_LOCAL_V1",exportedAt:new Date().toISOString(),topics:stripImagesFromBackup(topics)};
+  const blob=new Blob([JSON.stringify(backup,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="LPC_OPC_Study_Backup_"+new Date().toISOString().slice(0,10)+".json";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500);
+  storageStatus("Study backup downloaded. Images are not included; keep LPCOPCfiles separately.");
+ }catch(e){alert("Backup failed: "+e.message)}
+}
+async function importStudyBackup(file){
+ try{
+  if(!file)return;const data=JSON.parse(await file.text());
+  if(!Array.isArray(data.topics))throw new Error("This file does not contain a valid study backup.");
+  if(!confirm("Import this backup and replace the study content currently saved on this device? Download a backup first if you want to keep the current content."))return;
+  const imported=JSON.parse(JSON.stringify(data.topics));
+  walkTopics(imported,t=>{
+   if(!Array.isArray(t.slides))t.slides=[];if(!Array.isArray(t.cards))t.cards=[];if(!Array.isArray(t.subtopics))t.subtopics=[];
+   for(const slide of t.slides||[]){if(!slide[3])continue;const doc=new DOMParser().parseFromString(slide[3],"text/html");doc.querySelectorAll("img").forEach(img=>{img.removeAttribute("src");img.removeAttribute("data-local-image-id");img.dataset.imagePlaceholder="1"});slide[3]=doc.body.innerHTML}
+  });
+  topics=imported;if(!persist())throw new Error("Could not save imported study data. Check available device storage.");
+  testView=null;activeTest=null;showHome();alert("Study backup imported. Images were not included. Use Import images from Files to reconnect them.");
+ }catch(e){alert("Import failed: "+e.message)}
+}
+function normaliseImageName(name){return String(name||"").split("/").pop().toLowerCase().replace(/\.[^.]+$/,"").replace(/[^a-z0-9]/g,"")}
+async function importImageFiles(files){
+ const list=[...files].filter(f=>f.type.startsWith("image/"));
+ if(!list.length){storageStatus("No image files were selected.");return}
+ const byName=new Map();for(const f of list){const n=normaliseImageName(f.name);if(n&&!byName.has(n))byName.set(n,f)}
+ let imported=0,unmatched=0,failed=0;
+ const tasks=[];
+ walkTopics(topics,t=>(t.slides||[]).forEach(slide=>{
+  if(!slide[3])return;
+  const doc=new DOMParser().parseFromString(slide[3],"text/html");
+  const imgs=[...doc.querySelectorAll("img")].filter(img=>!img.dataset.localImageId);
+  tasks.push({slide,doc,imgs});
+ }));
+ for(const task of tasks){
+  for(const img of task.imgs){
+   const file=byName.get(normaliseImageName(img.alt));
+   if(!file){unmatched++;continue}
+   try{
+    const id=await saveLocalImage(file,file.name);
+    img.dataset.localImageId=id;img.setAttribute("src","local-image:"+id);
+    img.removeAttribute("data-image-placeholder");img.removeAttribute("data-legacy-image-path");img.removeAttribute("data-supabase-path");
+    imported++;
+   }catch(e){failed++;console.warn("Image import failed",e)}
+  }
+  task.slide[3]=task.doc.body.innerHTML;
+ }
+ if(!persist())throw new Error("Study data could not be saved after importing images.");
+ storageStatus(`Imported ${imported} image(s). ${unmatched} image reference(s) did not match a filename; ${failed} failed. Keep the original folder as a backup.`);
+ showHome();
+}
+function bindStoragePanel(){
+ const el=id=>document.getElementById(id);
+ if(el("downloadStudyBackup"))el("downloadStudyBackup").onclick=downloadStudyBackup;
+ if(el("importStudyBackup"))el("importStudyBackup").onclick=()=>el("studyBackupPicker")?.click();
+ if(el("studyBackupPicker"))el("studyBackupPicker").onchange=e=>{importStudyBackup(e.target.files?.[0]);e.target.value=""};
+ if(el("importImageFolder"))el("importImageFolder").onclick=()=>el("imageFolderPicker")?.click();
+ if(el("imageFolderPicker"))el("imageFolderPicker").onchange=async e=>{await importImageFiles(e.target.files||[]);e.target.value=""};
+ updateStorageEstimate();
+}
+async function updateStorageEstimate(){
+ try{
+  const estimate=await navigator.storage?.estimate?.();
+  const usage=estimate?.usage||0,quota=estimate?.quota||0;
+  const persistent=await navigator.storage?.persisted?.().catch(()=>false);
+  if(navigator.storage?.persist)await navigator.storage.persist().catch(()=>false);
+  const status=document.getElementById("sbStatus");
+  if(status)status.textContent=`Local storage used: ${(usage/1024/1024).toFixed(1)} MB · Browser quota estimate: ${quota?(quota/1024/1024/1024).toFixed(1)+" GB":"not available"} · Persistent storage: ${persistent?"granted":"not confirmed"}`;
+ }catch(e){storageStatus("Local storage is enabled. iOS does not expose a reliable quota estimate here.")}
+}
+backBtn.onclick=()=>{if(currentSubtopic){currentSubtopic=null;currentTopic=currentMainTopic;section="study";slideIndex=0;renderTopic()}else showHome()};showHome();
+if("serviceWorker" in navigator && location.protocol.startsWith("http"))navigator.serviceWorker.register("./sw.js").catch(()=>{});
+</script>
+</body></html>
